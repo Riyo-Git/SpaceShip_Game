@@ -19,65 +19,36 @@ function main () {
 
 }
 
+function init () {
+	terrainBg = ctx.createPattern(resources.get('img/terrain.png'), 'repeat');
 
-(function () {
-	var resourceCache = {};
-	var loading = [];
-	var readyCallbacks = [];
+	document.getElementById('play-again').addEventListener('click', function () {
+		reset();
+	});
+}
 
-	function load (urlOrSeq) {
-		if(urlOrSeq instanceOf Array){
-			urlOrSeq.forEach(function (url) {
-				_load(url);
-			})
-		}else{
-			_load(urlOrSeq);
-		}
-	}
+resources.load([
+	'img/sprites.png',
+	'img/terrain.png'
+	]);
+resources.onReady(init);
 
-	function _load (url) {
-		if(resourceCache[url]){
-			return resourceCache[url];
-		}else{
-			var img = new Image();
-			resourceCache[url] = false;
-			img.src = url;
+// Game state
+var player = {
+	pos: [0,0],
+	sprites: new Sprite('img/sprites.png', [0, 0], [39,39], 16, [0,1])
+};
+var bullets = [];
+var enemies = [];
+var explosions = [];
 
-			img.onload = function () {
-				resourceCache[url] = img;
+var lastFire = Date.now();
+var gameTime = 0;
+var isGameOver;
+var terrainPattern;
 
-				if(isReady()){
-					readyCallbacks.forEach(function (doIt) {
-						doIt();
-					});
-				};
-			}
-			img.src = url;
-		}
-	}
+// The score
 
-	function get (url) {
-		return resourceCache[url];
-	}
+var score = 0;
+var scoreEl = document.getElementById('score');
 
-	function isReady () {
-		var ready = true;
-		for(var k in resourceCache){
-			if(resourceCache.hasOwnProperty(k) && !resourceCache[k]){
-				ready = false;
-			}
-		}
-		return ready;
-	}
-
-	function onReady (doIt) {
-		readyCallbacks.push(doIt);
-	}
-
-	window.resources = {
-		load: load,
-		get: get,
-		onReady: onReady,
-		isReady: isReady
-	};
-})();
