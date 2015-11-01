@@ -1,5 +1,6 @@
 (function () {
-
+	var element;
+	var element2;
 	var baseDate = Date.now();
 	var canvas = document.createElement("canvas");
 	var ctx = canvas.getContext("2d");
@@ -16,10 +17,11 @@
 
 	function init () {
 		var img = engine.Api.resourcesCache.getResource('mario.jpg');
-		var element = engine.Api.setSprite;
-
-		element.init(ctx, img, [20, 30], [0,1,2,3,4,3,2,1,0], 20, 0, true);
+		element = new engine.Api.setSprite(ctx, img, [0, 0], [20, 30], [0,1,2,3,4,3,2,1,0], 20, 0, true);
 		element.render();
+
+		element2 = new engine.Api.setSprite(ctx, img, [100, 100], [20, 30], [0,1,2,3,4,3,2,1,0], 20, 0, true);
+		element2.render();
 
 		update();
 	}
@@ -28,7 +30,8 @@
 		var nowDate = Date.now();
 		var interval = (nowDate - baseDate) / 1000.0
 
-		engine.Api.setSprite.update(interval);
+		element.update(interval);
+		element2.update(interval);
 		baseDate = nowDate;
 		setTimeout(update,1000/30);
 	}
